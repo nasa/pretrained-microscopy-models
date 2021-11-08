@@ -1,0 +1,11 @@
+numpy
+matplotlib
+opencv
+pytorch
+torchvision
+segmentation-models-pytorch
+scikit-learn
+albumentations
+pretrainedmodels
+efficientnet_pytorch
+segmentation_models_pytorch
