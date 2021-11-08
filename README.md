@@ -11,9 +11,9 @@ The examples/classification_models_example.ipynb notebook provides an example of
 The segmentation_training.py file demonstrates how to use a pretrained model in a segmentation model through transfer learning. **This file will not currently run but may be a useful example until I update this repo.** I think the below snippet will work, but I haven't tested it. 
 
 `model = getattr(smp, decoder)(encoder_name=encoder, 
-                                      encoder_weights=initial_weights,
-                                      classes=len(class_values),
-                                      activation=activation)`
+                               encoder_weights=initial_weights,
+                               classes=len(class_values),
+                               activation=activation)`
 </br>
 `url = get_pretrained_microscopynet_url('resnet50', 'microscopynet')`
 </br>
