@@ -8,7 +8,8 @@ Software tools to build deep learning microscopy segmentation models with less t
 
 ## How to use pretrained encoders
 The examples/classification_models_example.ipynb notebook provides an example of how to download and apply a MicroNet pretrained  model for classification (after demonstrating the same for an ImageNet model for comparison). </br></br>
-The segmentation_training.py file demonstrates how to use a pretrained model in a segmentation model through transfer learning. **This file will not currently run but may be a useful example until I update this repo.** I think the below snippet will work, but I haven't tested it. 
+The segmentation_training.py file demonstrates how to use a pretrained model in a segmentation model through transfer learning. **segmentation_training.py will not currently run but may be a useful example until I update this repo.** </br>
+I think the below snippet will work, but I haven't tested it. 
 
 ```python
 import microscopy_segmnetation_models as msm
