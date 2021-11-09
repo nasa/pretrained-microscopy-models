@@ -10,11 +10,27 @@ Software tools to build deep learning microscopy segmentation models with less t
 The examples/classification_models_example.ipynb notebook provides an example of how to download and apply a MicroNet pretrained  model for classification (after demonstrating the same for an ImageNet model for comparison). </br></br>
 The segmentation_training.py file demonstrates how to use a pretrained model in a segmentation model through transfer learning. **This file will not currently run but may be a useful example until I update this repo.** I think the below snippet will work, but I haven't tested it. 
 
-`model = getattr(smp, decoder)(encoder_name=encoder, encoder_weights=initial_weights, classes=len(class_values), activation=activation)`
-</br>
-`url = util.get_pretrained_microscopynet_url('resnet50', 'microscopynet')`
-</br>
-`model.encoder.load_state_dict(model_zoo.load_url(url))`
+```python
+import microscopy_segmnetation_models as msm
+import segmentation_models_pytorch as smp
+
+# dictonary containing pixel values of annotated segmentation labels
+class_values = {'matrix': [0,0,0],
+               'secondary': [255,0,0],
+               'tertiary' : [0,0,255]}
+
+# Setup the model
+activation = 'softmax2d' if len(class_values) > 1 else 'sigmoid' #'softmax2d' for multicalss segmentation
+model = getattr(smp, decoder)(encoder_name='resnet50', 
+    encoder_weights=None, 
+    classes=len(class_values), 
+    activation=activation)
+
+# Load MicroNet weights into the encoder
+url = msm.util.get_pretrained_microscopynet_url('resnet50', 'microscopynet')
+model.encoder.load_state_dict(model_zoo.load_url(url))
+```
+
 ## Available pretrained encoders
 ### MicroNet
 These encoders were randomly initialized and then pretrained on MicroNet. The table shows the top 1 and top 5 classification accuracy for each model on MicroNet.
