@@ -1,4 +1,4 @@
-# microscopy_segmentation_models
+# pretrained_microscopy_models
 
 Software tools to build deep learning microscopy segmentation models with less training data. Pretrained MicroNet encoders are available for download. Leverages transfer learning from classification models trained on a large (>100,000 images) dataset of microscopy images.
 
