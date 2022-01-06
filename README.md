@@ -1,36 +1,32 @@
 # pretrained_microscopy_models
 
-Software tools to build deep learning microscopy segmentation models with less training data. Pretrained MicroNet encoders are available for download. Leverages transfer learning from classification models trained on a large (>100,000 images) dataset of microscopy images.
+Software tools to build deep learning microscopy segmentation and analysis models with less training data. Pretrained MicroNet encoders are available for download. Leverages transfer learning from classification models trained on a large (>100,000 images) dataset of microscopy images. 
 
-## **This repository will be updated with much cleaner code in the near future with the publication of the preprint.**
-</br>
-</br>
+## Instalation:
+```bash
+$ pip install git+https://github.com/nasa/pretrained-microscopy-models
+````
 
 ## How to use pretrained encoders
-The examples/classification_models_example.ipynb notebook provides an example of how to download and apply a MicroNet pretrained  model for classification (after demonstrating the same for an ImageNet model for comparison). </br></br>
-The segmentation_training.py file demonstrates how to use a pretrained model in a segmentation model through transfer learning. **segmentation_training.py will not currently run but may be a useful example until I update this repo.** </br>
-I think the below snippet will work, but I haven't tested it. 
-
 ```python
-import microscopy_segmnetation_models as msm
+import pretrained_microscopy_models as psm
 import segmentation_models_pytorch as smp
 
-# dictonary containing pixel values of annotated segmentation labels
-class_values = {'matrix': [0,0,0],
-               'secondary': [255,0,0],
-               'tertiary' : [0,0,255]}
-
-# Setup the model
-activation = 'softmax2d' if len(class_values) > 1 else 'sigmoid' #'softmax2d' for multicalss segmentation
-model = getattr(smp, decoder)(encoder_name='resnet50', 
-    encoder_weights=None, 
-    classes=len(class_values), 
-    activation=activation)
+# setup a UNet model with a ResNet50 backbone.
+model = getattr(smp, 'Unet')(encoder_name='resnet50', 
+                             encoder_weights=None, 
+                             classes=3, 
+                             activation='softmax2d')
 
 # Load MicroNet weights into the encoder
-url = msm.util.get_pretrained_microscopynet_url('resnet50', 'microscopynet')
+url = psm.util.get_pretrained_microscopynet_url('resnet50', 'microscopynet')
 model.encoder.load_state_dict(model_zoo.load_url(url))
 ```
+The examples/classification_models_example.ipynb notebook provides an example of how to download and apply a MicroNet pretrained  model for classification (after demonstrating the same for an ImageNet model for comparison). </br></br>
+The segmentation_training.py file demonstrates how to use a pretrained model in a segmentation model through transfer learning. **segmentation_training.py will not currently run but may be a useful example until I update this repo.** </br>
+
+
+
 
 ## Available pretrained encoders
 ### MicroNet
