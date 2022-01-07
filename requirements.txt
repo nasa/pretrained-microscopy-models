@@ -1,5 +1,6 @@
 numpy
 matplotlib
+opencv-python
 pytorch
 torchvision
 segmentation-models-pytorch
