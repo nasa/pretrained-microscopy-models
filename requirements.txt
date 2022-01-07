@@ -1,10 +1,8 @@
+segmentation-models-pytorch
 numpy
 matplotlib
 opencv-python
 pytorch
-torchvision
-segmentation-models-pytorch
 scikit-learn
 albumentations
-pretrainedmodels
-efficientnet-pytorch
+
