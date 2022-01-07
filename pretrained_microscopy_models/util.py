@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import segmentation_models_pytorch as smp
+import torch
 import torch.utils.model_zoo as model_zoo
 
 
@@ -81,15 +82,17 @@ def get_segmentation_model(architecture,
     if activation is None:
         activation = 'softmax2d' if classes > 1 else 'sigmoid' 
 
-    if encoder_weights == 'imagenet' and \
+    initial_weights = 'imagenet' if encoder_weights == 'imagenet' else None
+
+    if initial_weights == 'imagenet' and \
         encoder in ['dpn68b',  'dpn92', 'dpn137', 'dpn107']:
-        encoder_weights = 'imagenet+5k'
+        initial_weights = 'imagenet+5k'
 
     # create the model
     try:
         model = getattr(smp, architecture)(
             encoder_name=encoder, 
-            encoder_weights=encoder_weights,
+            encoder_weights=initial_weights,
             classes=classes,
             activation=activation)
     except ValueError:
@@ -97,8 +100,9 @@ def get_segmentation_model(architecture,
 
     # load pretrained weights 
     if encoder_weights in ['micronet', 'imagemicronet']:
+        map = None if torch.cuda.is_available() else torch.device('cpu')
         url = get_pretrained_microscopynet_url(encoder, encoder_weights)
-        model.encoder.load_state_dict(model_zoo.load_url(url))
+        model.encoder.load_state_dict(model_zoo.load_url(url, map_location=map))
 
     return model
 
