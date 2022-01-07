@@ -3,6 +3,8 @@
 Software tools to build deep learning microscopy segmentation and analysis models with less training data. Pretrained MicroNet encoders are available for download. Leverages transfer learning from classification models trained on a large (>100,000 images) dataset of microscopy images. 
 
 ## Instalation:
+1. First install [PyTorch](https://pytorch.org/).
+2. Install this pretrained_microscopy_models with the following command.
 ```bash
 pip install git+https://github.com/nasa/pretrained-microscopy-models
 ````
