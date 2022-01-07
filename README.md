@@ -4,12 +4,12 @@ Software tools to build deep learning microscopy segmentation and analysis model
 
 ## Instalation:
 ```bash
-$ pip install git+https://github.com/nasa/pretrained-microscopy-models
+pip install git+https://github.com/nasa/pretrained-microscopy-models
 ````
 
 ## How to use pretrained encoders
 ```python
-import pretrained_microscopy_models as psm
+import pretrained_microscopy_models as pmm
 import segmentation_models_pytorch as smp
 
 # setup a UNet model with a ResNet50 backbone.
@@ -19,11 +19,11 @@ model = getattr(smp, 'Unet')(encoder_name='resnet50',
                              activation='softmax2d')
 
 # Load MicroNet weights into the encoder
-url = psm.util.get_pretrained_microscopynet_url('resnet50', 'microscopynet')
+url = pmm.util.get_pretrained_microscopynet_url('resnet50', 'microscopynet')
 model.encoder.load_state_dict(model_zoo.load_url(url))
 ```
 The examples/classification_models_example.ipynb notebook provides an example of how to download and apply a MicroNet pretrained  model for classification (after demonstrating the same for an ImageNet model for comparison). </br></br>
-The segmentation_training.py file demonstrates how to use a pretrained model in a segmentation model through transfer learning. **segmentation_training.py will not currently run but may be a useful example until I update this repo.** </br>
+The examples/segmentation_training.py file demonstrates how to use a pretrained model in a segmentation model through transfer learning. **segmentation_training.py will not currently run but may be a useful example until I update this repo.** </br>
 
 
 
