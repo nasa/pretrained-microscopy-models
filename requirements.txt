@@ -2,7 +2,7 @@ segmentation-models-pytorch
 numpy
 matplotlib
 opencv-python
-pytorch
+torch
 scikit-learn
 albumentations
 
