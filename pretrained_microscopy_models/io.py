@@ -1,5 +1,6 @@
 import cv2
 import os
+import numpy as np
 
 from torch.utils.data import Dataset as BaseDataset
 
@@ -27,8 +28,6 @@ class Dataset(BaseDataset):
             images, 
             masks, 
             class_values,
-            image_list=None,
-            mask_list=None,
             augmentation=None, 
             preprocessing=None,
     ):

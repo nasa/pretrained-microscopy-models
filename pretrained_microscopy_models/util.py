@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-
+from collections import OrderedDict
 
 # helper function for data visualization
 def visualize(**images):
@@ -47,4 +47,21 @@ def get_pretrained_microscopynet_url(encoder, encoder_weights):
     return url_base + f'{encoder}_pretrained_{encoder_weights}' + url_end
 
 
-
+def remove_module_from_state_dict(state_dict):
+    """Removes 'module.' from nn.Parallel models.  
+    If module does not exist it just returns the state dict"""
+    if list(state_dict.keys())[0].startswith('module'):
+        new_state_dict = OrderedDict()
+        for k, v in state_dict.items():
+            name = k[7:] # remove `module.`
+            new_state_dict[name] = v           
+        return new_state_dict
+    elif list(state_dict.keys())[0].startswith('features.module'):
+        new_state_dict = OrderedDict()
+        for k, v in state_dict.items():
+            name = k[:9] + k[9+7:] # remove `module.`
+            if name.startswith('features.'):
+                new_state_dict[name] = v
+        return new_state_dict
+    else:
+        return state_dict

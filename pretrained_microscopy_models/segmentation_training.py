@@ -14,9 +14,9 @@ from collections import OrderedDict
 from torch.utils.data import DataLoader
 
 
-import util
-import io
-import losses
+from . import util
+from . import io
+from . import losses
 
 
 def to_tensor(x, **kwargs):
@@ -101,10 +101,13 @@ def create_segmentation_model(architecture,
     return model
 
 def train_segmentation_model(model,
+                             architecture,
+                             encoder,
                              train_dataset,
                              validation_dataset,
                              class_values, 
-                             epochs=None, #ADD LOGIC TO STOP AFTER THIS MANY EPOCHS
+                             loss=None,
+                             epochs=None, 
                              patience=30,
                              device='cuda', 
                              lr=2e-4, 
@@ -113,30 +116,59 @@ def train_segmentation_model(model,
                              val_batch_size=12, 
                              num_workers=0, 
                              save_folder='./', 
+                             save_name=None,
                              multi_gpu=False):
 
     # setup and check parameters
+    assert len(class_values) != 2, "Two classes is binary classification.  Just specify the posative class value."
+    assert patience is not None or epochs is not None, "Need to set patience or epochs to define a stopping point." 
+    epochs = 1e10 if epochs is None else epochs # this will basically never be reached.
+    patience = 1e10 if patience is None else patience # this will basically never be reached.
+
+    # load or create model
+        # TODO need to reload the optimizer.
+    if type(model) is dict: # passed the state back for restarting
+        state = model #load state dictionary
+        architecture = state['architecture']
+        encoder = state['encoder']
+        # create empty model
+        model=create_segmentation_model(architecture, encoder, None, len(class_values))
+        # load saved weights
+        model.load_state_dict(util.remove_module_from_state_dict(state['state_dict']))
+    elif type(model) is str: # passed saved model state for restarting
+        state = torch.load(model) 
+        architecture = state['architecture']
+        encoder = state['encoder']
+        model=create_segmentation_model(architecture, encoder, None, len(class_values))
+        model.load_state_dict(util.remove_module_from_state_dict(state['state_dict']))
+    else: # Fresh PyTorch model for segmentation
+        state = {
+            'architecture': architecture,
+            'encoder': encoder,
+            'train_loss': [],
+            'valid_loss': [],
+            'train_iou': [],
+            'valid_iou': [],
+            'max_score': 0,
+            'class_values': class_values
+        }
+
     if not os.path.exists(save_folder):
         os.makedirs(save_folder)
-    assert len(class_values) != 2, "Two classes is binary classification.  Just specify the posative class value"
-            
+       
+    
     if multi_gpu:
         model = torch.nn.DataParallel(model).cuda()
 
-    # create dataloaders
-    try:
-        preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder, 'imagenet')
-    except ValueError:
-        preprocessing_fn = smp.encoders.get_preprocessing_fn(encoder, 'imagenet+5k')
         
-   
-    
+    # create training dataloaders
     train_loader = DataLoader(train_dataset, batch_size=batch_size, 
                               shuffle=True, num_workers=num_workers, pin_memory=True)  
     valid_loader = DataLoader(validation_dataset, batch_size=val_batch_size, 
                               shuffle=False, num_workers=num_workers, pin_memory=True)
     
-    loss = losses.DiceBCELoss(weight=0.7)
+    
+    loss = losses.DiceBCELoss(weight=0.7) if loss is None else loss
 
     metrics = [smp.utils.metrics.IoU(threshold=0.5),]
     
@@ -168,15 +200,6 @@ def train_segmentation_model(model,
     epoch = 0
     t0 = time.time()
 
-    state = {
-             'train_loss': [],
-             'valid_loss': [],
-             'train_iou': [],
-             'valid_iou': [],
-             'max_score': 0,
-             'class_values': class_values
-            }
-    
     while True:
         t = time.time() - t0
         print('\nEpoch: {}, lr: {:0.8f}, time: {:0.2f} seconds, patience step: {}, best iou: {:0.4f}'.format(
@@ -215,12 +238,18 @@ def train_segmentation_model(model,
         
         if epoch >= epochs:
             print('\n\nTraining done! Saving final model')
+            if save_name is not None:
+                shutil.copyfile(os.path.join(save_folder, 'model_best.pth.tar'), 
+                                os.path.join(save_folder, save_name))
             return state
 
             
         # Use early stopping if there has not been improvment in a while
         if patience_step >= patience:
             print('\n\nTraining done!  No improvement in {} epochs. Saving final model'.format(patience))
+            if save_name is not None:
+                shutil.copyfile(os.path.join(save_folder, 'model_best.pth.tar'), 
+                                os.path.join(save_folder, save_name))
             return state
 
     
