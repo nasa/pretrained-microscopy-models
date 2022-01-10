@@ -18,7 +18,7 @@ model = pmm.util.get_segmentation_model('Unet', 'resnet50', 'micronet', classes=
 
 # See examples to train and make predictions with model.
 ```
-### [This example](examples/multiclass_segmentation_example.ipynb)  demonstrates how to use a pretrained model in a segmentation model through transfer learning. </br></br>
+[This example](examples/multiclass_segmentation_example.ipynb)  demonstrates how to use a pretrained model in a segmentation model through transfer learning. </br></br>
 
 [This example](examples/classification_models_example.ipynb) provides shows how to download and apply a MicroNet pretrained  model for classification (after demonstrating the same for an ImageNet model for comparison). </br></br>
 
