@@ -9,6 +9,20 @@ Software tools to build deep learning microscopy segmentation and analysis model
 pip install git+https://github.com/nasa/pretrained-microscopy-models
 ````
 
+
+## How load pretrained classification model
+```python
+import torch
+import pretrained_microscopy_models as pmm
+import torch.utils.model_zoo as model_zoo
+
+model = torch.hub.load('pytorch/vision:v0.10.0', 'resnet50', pretrained=False)
+url = pmm.util.get_pretrained_microscopynet_url('resnet50', 'microscopynet')
+model.load_state_dict(model_zoo.load_url(url))
+model.eval()  # <- MicrosNet model for classifcation or transfer learning
+```
+[This example](examples/classification_models_example.ipynb) provides shows how to download and apply a MicroNet pretrained  model for classification (after demonstrating the same for an ImageNet model for comparison). 
+
 ## How to use pretrained encoders
 ```python
 import pretrained_microscopy_models as pmm
@@ -20,10 +34,13 @@ model = pmm.util.get_segmentation_model('Unet', 'resnet50', 'micronet', classes=
 ```
 [This example](examples/multiclass_segmentation_example.ipynb)  demonstrates how to use a pretrained model in a segmentation model through transfer learning. </br></br>
 
-[This example](examples/classification_models_example.ipynb) provides shows how to download and apply a MicroNet pretrained  model for classification (after demonstrating the same for an ImageNet model for comparison). </br></br>
 
+## Benchmark datasets:
+### Ni-based superalloys (Super 1-4 in paper)
+![Ni-Superalloy](benchmark_segmentation_data/Super1/train/spot3_0d_3.tif) ![Super Mask](benchmark_segmentation_data/Super1/train_annot/spot3_0d_3_mask.tif)
 
-
+### Environmental barrier coatings (EBC 1-3 in paper)
+![EBC](benchmark_segmentation_data/EBC/train/050317#3_S0440019.tif) ![EBC Mask](readme_images/050317#3_S0440019.tif)
 
 ## Available pretrained encoders
 ### MicroNet
