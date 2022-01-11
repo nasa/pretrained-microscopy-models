@@ -3,6 +3,9 @@ import os
 import shutil
 import time
 import numpy as np
+import warnings
+import numbers
+from numpy.lib.stride_tricks import as_strided
 import matplotlib.pyplot as plt
 import albumentations as albu
 import torch
@@ -12,7 +15,7 @@ import segmentation_models_pytorch as smp
 from itertools import cycle, product
 from collections import OrderedDict
 from torch.utils.data import DataLoader
-
+from sklearn.feature_extraction.image import extract_patches_2d, reconstruct_from_patches_2d
 
 from . import util
 from . import io
@@ -99,6 +102,173 @@ def create_segmentation_model(architecture,
         model.encoder.load_state_dict(model_zoo.load_url(url, map_location=map))
 
     return model
+
+def visualize_prediction_accuracy(prediction, truth, labels):
+    out = np.zeros(truth.shape, dtype='uint8')
+    trues = [np.all(truth == v, axis=-1) for v in labels]
+    preds = [prediction[:,:,i] for i in range(prediction.shape[2])]
+    for t, p in zip(trues, preds):
+        out[t & p, :] = [255, 255, 255] # true positive
+        out[t & ~p, :] = [255, 0, 255] # false negative
+        out[~t & p, :] = [0, 255, 255] # false positive       
+    return out
+
+def load_segmentation_model(model_path, classes):
+    """Load a segmentation model from saved state path
+
+    Args:
+        model_path (str): Path to saved state
+        classes (int): number of segmentation classes
+
+    Returns:
+        nn.module: PyTorch segmentation model
+    """
+    state = torch.load(model_path)
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    architecture = state['architecture']
+    encoder = state['encoder']
+    model=create_segmentation_model(architecture, encoder, None, classes)
+    model.load_state_dict(util.remove_module_from_state_dict(state['state_dict']))
+    model.to(device)
+    model.eval()
+    try:
+        preprocessing_fn = smp.encoders.get_preprocessing_fn(
+            encoder, 'imagenet')
+    except ValueError:
+        preprocessing_fn = smp.encoders.get_preprocessing_fn(
+            encoder, 'imagenet+5k')
+    return model, preprocessing_fn
+
+def extract_patches(arr, patch_shape=8, extraction_step=1):
+    #THIS FUNCTION COMES FROM AN OLD VERSION OF SCIKIT-LEARN
+    """Extracts patches of any n-dimensional array in place using strides.
+
+    Given an n-dimensional array it will return a 2n-dimensional array with
+    the first n dimensions indexing patch position and the last n indexing
+    the patch content. This operation is immediate (O(1)). A reshape
+    performed on the first n dimensions will cause numpy to copy data, leading
+    to a list of extracted patches.
+
+    Read more in the :ref:`User Guide <image_feature_extraction>`.
+
+    Parameters
+    ----------
+    arr : ndarray
+        n-dimensional array of which patches are to be extracted
+
+    patch_shape : integer or tuple of length arr.ndim
+        Indicates the shape of the patches to be extracted. If an
+        integer is given, the shape will be a hypercube of
+        sidelength given by its value.
+
+    extraction_step : integer or tuple of length arr.ndim
+        Indicates step size at which extraction shall be performed.
+        If integer is given, then the step is uniform in all dimensions.
+
+
+    Returns
+    -------
+    patches : strided ndarray
+        2n-dimensional array indexing patches on first n dimensions and
+        containing patches on the last n dimensions. These dimensions
+        are fake, but this way no data is copied. A simple reshape invokes
+        a copying operation to obtain a list of patches:
+        result.reshape([-1] + list(patch_shape))
+    """
+
+    arr_ndim = arr.ndim
+
+    if isinstance(patch_shape, numbers.Number):
+        patch_shape = tuple([patch_shape] * arr_ndim)
+    if isinstance(extraction_step, numbers.Number):
+        extraction_step = tuple([extraction_step] * arr_ndim)
+
+    patch_strides = arr.strides
+
+    slices = [slice(None, None, st) for st in extraction_step]
+    indexing_strides = arr[slices].strides
+
+    patch_indices_shape = ((np.array(arr.shape) - np.array(patch_shape)) //
+                           np.array(extraction_step)) + 1
+
+    shape = tuple(list(patch_indices_shape) + list(patch_shape))
+    strides = tuple(list(indexing_strides) + list(patch_strides))
+
+    patches = as_strided(arr, shape=shape, strides=strides)
+    return patches
+
+# https://github.com/choosehappy/PytorchDigitalPathology
+def segmentation_models_inference(io, model, preprocessing_fn, device = None, batch_size = 8, patch_size = 512,
+                                  num_classes=3, probabilities=None):
+
+    # This will not output the first class and assumes that the first class is wherever the other classes are not!
+
+    io = preprocessing_fn(io)
+    io_shape_orig = np.array(io.shape)
+    stride_size = patch_size // 2
+    if device is None:
+        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    # add half the stride as padding around the image, so that we can crop it away later
+    io = np.pad(io, [(stride_size // 2, stride_size // 2), (stride_size // 2, stride_size // 2), (0, 0)],
+                mode="reflect")
+
+    io_shape_wpad = np.array(io.shape)
+
+    # pad to match an exact multiple of unet patch size, otherwise last row/column are lost
+    npad0 = int(np.ceil(io_shape_wpad[0] / patch_size) * patch_size - io_shape_wpad[0])
+    npad1 = int(np.ceil(io_shape_wpad[1] / patch_size) * patch_size - io_shape_wpad[1])
+
+    io = np.pad(io, [(0, npad0), (0, npad1), (0, 0)], mode="constant")
+
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore')
+        arr_out = extract_patches(io, (patch_size, patch_size, 3), stride_size)
+
+    arr_out_shape = arr_out.shape
+    arr_out = arr_out.reshape(-1, patch_size, patch_size, 3)
+
+    # in case we have a large network, lets cut the list of tiles into batches
+    output = np.zeros((0, num_classes, patch_size, patch_size))
+    def divide_batch(l, n): 
+        for i in range(0, l.shape[0], n):  
+            yield l[i:i + n,::] 
+    for batch_arr in divide_batch(arr_out, batch_size):
+        arr_out_gpu = torch.from_numpy(batch_arr.transpose(0, 3, 1, 2).astype('float32')).to(device)
+
+        # ---- get results
+        output_batch = model.predict(arr_out_gpu)
+
+        # --- pull from GPU and append to rest of output
+        if probabilities is None:
+            output_batch = output_batch.detach().cpu().numpy().round()
+        else:
+            output_batch = output_batch.detach().cpu().numpy()
+
+        output = np.append(output, output_batch, axis=0)
+
+    output = output.transpose((0, 2, 3, 1))
+
+    # turn from a single list into a matrix of tiles
+    output = output.reshape(arr_out_shape[0], arr_out_shape[1], patch_size, patch_size, output.shape[3])
+
+    # remove the padding from each tile, we only keep the center
+    output = output[:, :, stride_size // 2:-stride_size // 2, stride_size // 2:-stride_size // 2, :]
+
+    # turn all the tiles into an image
+    output = np.concatenate(np.concatenate(output, 1), 1)
+
+    # incase there was extra padding to get a multiple of patch size, remove that as well
+    output = output[0:io_shape_orig[0], 0:io_shape_orig[1], :]  # remove paddind, crop back
+    if probabilities is None:
+        if num_classes == 1:
+            return output.astype('bool')
+        else:
+            return output[:, :, 1:].astype('bool')
+    else:
+        for i in range(num_classes-1): #don't care about background class
+            output[:,:,i+1] = output[:,:,i+1] > probabilities[i]
+        return output[:, :, 1:].astype('bool')
+
 
 def train_segmentation_model(model,
                              architecture,
