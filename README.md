@@ -37,7 +37,7 @@ model = pmm.util.get_segmentation_model('Unet', 'resnet50', 'micronet', classes=
 
 ## Benchmark datasets:
 #### Ni-based superalloys (Super 1-4 in paper)
-![Ni-Superalloy](readme_images/super.jpg){:height="256px" width="256px"} ![Super Mask](readme_images/super_mask.jpg)
+![Ni-Superalloy](readme_images/super.jpg) ![Super Mask](readme_images/super_mask.jpg)
 
 #### Environmental barrier coatings (EBC 1-3 in paper)
 ![EBC](readme_images/ebc.jpg) ![EBC Mask](readme_images/ebc_mask.png)
