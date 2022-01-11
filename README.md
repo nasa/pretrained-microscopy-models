@@ -40,7 +40,7 @@ model = pmm.util.get_segmentation_model('Unet', 'resnet50', 'micronet', classes=
 ![Ni-Superalloy](/benchmark_segmentation_data/Super1/train/spot3_0d_3.tif?raw=true) ![Super Mask](/benchmark_segmentation_data/Super1/train_annot/spot3_0d_3_mask.tif)
 
 #### Environmental barrier coatings (EBC 1-3 in paper)
-![EBC](/benchmark_segmentation_data/EBC/train/050317#3_S0440019.tif) ![EBC Mask](/readme_images/050317#3_S0440019.png)
+![EBC](/benchmark_segmentation_data/EBC/train/050317#3_S0440019.tif) ![EBC Mask](readme_images/050317#3_S0440019.png?raw=true)
 
 ## Available pretrained encoders
 ### MicroNet
