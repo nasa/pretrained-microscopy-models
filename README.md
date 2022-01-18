@@ -23,7 +23,7 @@ model.eval()  # <- MicrosNet model for classifcation or transfer learning
 ```
 [This example](examples/classification_models_example.ipynb) provides shows how to download and apply a MicroNet pretrained  model for classification (after demonstrating the same for an ImageNet model for comparison). 
 
-## How to use pretrained encoders
+## How to use pretrained encoders for semantic segmentation
 ```python
 import pretrained_microscopy_models as pmm
 
