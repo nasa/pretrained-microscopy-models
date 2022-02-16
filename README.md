@@ -1,6 +1,8 @@
 # pretrained_microscopy_models
 
-Software tools to build deep learning microscopy segmentation and analysis models with less training data. Pretrained MicroNet encoders are available for download. Leverages transfer learning from classification models trained on a large (>100,000 images) dataset of microscopy images. 
+Software tools to build deep learning microscopy segmentation and analysis models with less training data. Pretrained MicroNet encoders are available for download. Leverages transfer learning from classification models trained on a large (>100,000 images) dataset of microscopy images. <br>
+## References
+A preprint of the paper is available [here](https://ntrs.nasa.gov/api/citations/20210026119/downloads/TM-20210026119.pdf).
 
 ## Instalation:
 1. First install [PyTorch](https://pytorch.org/).
@@ -8,7 +10,7 @@ Software tools to build deep learning microscopy segmentation and analysis model
 ```bash
 pip install git+https://github.com/nasa/pretrained-microscopy-models
 ````
-
+If you have any trouble see requirements_frozen.txt for the environment that worked for me on Windows (and a similar environment was used successfully on Linux).
 
 ## How load pretrained classification model
 ```python
@@ -24,6 +26,7 @@ model.eval()  # <- MicrosNet model for classifcation or transfer learning
 [This example](examples/classification_models_example.ipynb) provides shows how to download and apply a MicroNet pretrained  model for classification (after demonstrating the same for an ImageNet model for comparison). 
 
 ## How to use pretrained encoders
+(This may require )
 ```python
 import pretrained_microscopy_models as pmm
 
@@ -43,8 +46,17 @@ model = pmm.util.get_segmentation_model('Unet', 'resnet50', 'micronet', classes=
 ![EBC](readme_images/ebc.jpg) ![EBC Mask](readme_images/ebc_mask.png)
 
 ## Available pretrained encoders
-### MicroNet
-These encoders were randomly initialized and then pretrained on MicroNet. The table shows the top 1 and top 5 classification accuracy for each model on MicroNet.
+
+### MicroNet v1.1
+This model was retrained. The code will default to the latest version.
+
+| **encoder**         | **acc1** | **acc5** |
+|---------------------|----------|----------|
+| resnet50            | 76.630   | 94.667   |
+
+
+### MicroNet v1.0
+This was the version used in the paper. These encoders were randomly initialized and then pretrained on MicroNet. The table shows the top 1 and top 5 classification accuracy for each model on MicroNet.
 
 | **encoder**         | **acc1** | **acc5** |
 |---------------------|----------|----------|
@@ -85,7 +97,7 @@ These encoders were randomly initialized and then pretrained on MicroNet. The ta
 | vgg16_bn            | 71.481   | 90.926   |
 | xception            | 93.815   | 99.63    |
 
-### ImageNet --> MicroNet
+### ImageNet --> MicroNet v1.0
 These encoders were pretrained on ImageNet and then finetuned on MicroNet
 | **encoder**         | **acc1** | **acc5** |
 |---------------------|----------|----------|

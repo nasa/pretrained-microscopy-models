@@ -1,3 +1,4 @@
+from webbrowser import get
 import matplotlib.pyplot as plt
 from collections import OrderedDict
 
@@ -21,7 +22,7 @@ class dotdict(dict):
     __setattr__ = dict.__setitem__
     __delattr__ = dict.__delitem__
 
-def get_pretrained_microscopynet_url(encoder, encoder_weights):
+def get_pretrained_microscopynet_url(encoder, encoder_weights, version=1.1):
     """Get the url to download the specified pretrained encoder.
 
     Args:
@@ -29,10 +30,17 @@ def get_pretrained_microscopynet_url(encoder, encoder_weights):
         encoder_weights (str): pretraining dataset, either 'microscopynet' or 
             'imagenet-microscopynet' with the latter indicating the encoder
             was first pretrained on imagenet and then finetuned on microscopynet
+        version (float): model version to use, defaults to latest. 
+            Current options are 1.0 or 1.1.
 
     Returns:
         str: url to download the pretrained model
     """
+
+    # only resnet50/micronet has version 1.1 so I'm not going to overcomplicate this right now.
+    if encoder != 'resnet50' or encoder_weights != 'micronet':
+        version = 1.0
+
     # correct for name change for URL
     if encoder_weights == 'micronet':
         encoder_weights = 'microscopynet'
@@ -43,7 +51,7 @@ def get_pretrained_microscopynet_url(encoder, encoder_weights):
 
     # get url
     url_base = 'https://nasa-public-data.s3.amazonaws.com/microscopy_segmentation_models/'
-    url_end = '_v1.0.pth.tar'
+    url_end = '_v%s.pth.tar' %str(version)
     return url_base + f'{encoder}_pretrained_{encoder_weights}' + url_end
 
 
@@ -65,3 +73,8 @@ def remove_module_from_state_dict(state_dict):
         return new_state_dict
     else:
         return state_dict
+
+if __name__ == '__main__':
+    print(get_pretrained_microscopynet_url('se_resnet50', 'micronet', version=1.1))
+    print(get_pretrained_microscopynet_url('resnet50', 'micronet', version=1.0))
+    print(get_pretrained_microscopynet_url('resnet50', 'micronet'))
