@@ -36,6 +36,9 @@ model = pmm.util.get_segmentation_model('Unet', 'resnet50', 'micronet', classes=
 ```
 [This example](examples/multiclass_segmentation_example.ipynb)  demonstrates how to use a pretrained model in a segmentation model through transfer learning. </br></br>
 
+## Share micrographs to improve MicroNet
+Any micrographs you can share to improve MicroNet would be greatly appreciated. Anything marked confidential in the comments will not be shared (and only used to train better encoders). You can group images in folders named after the material type and we can also make use of unlabelled micrographs. Thank you! </br>
+Link: https://nasagov.app.box.com/f/f505f4652ffc4a1788e630282c5f8e58
 
 ## Benchmark datasets:
 #### Ni-based superalloys (Super 1-4 in paper)
@@ -52,7 +55,6 @@ This model was retrained. The code will default to the latest version.
 | **encoder**         | **acc1** | **acc5** |
 |---------------------|----------|----------|
 | resnet50            | 76.630   | 94.667   |
-
 
 ### MicroNet v1.0
 This was the version used in the paper. These encoders were randomly initialized and then pretrained on MicroNet. The table shows the top 1 and top 5 classification accuracy for each model on MicroNet.
