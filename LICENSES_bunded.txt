@@ -1,4 +1,4 @@
-The NumPy repository and source distributions bundle several libraries that are
+This repository bundles several libraries that are
 compatibly licensed.  We list these here.
 
 Name: lapack-lite
@@ -6,17 +6,14 @@ Files: numpy/linalg/lapack_lite/*
 License: BSD-3-Clause
   For details, see numpy/linalg/lapack_lite/LICENSE.txt
 
-Name: tempita
-Files: tools/npy_tempita/*
+Name: PytorchDigitalPathology
 License: MIT
-  For details, see tools/npy_tempita/license.txt
+  For details, see https://github.com/choosehappy/PytorchDigitalPathology/blob/master/LICENSE.txt
 
-Name: dragon4
-Files: numpy/core/src/multiarray/dragon4.c
+Name: segmentation models pytorch
 License: MIT
-  For license text, see numpy/core/src/multiarray/dragon4.c
+  For license text, see https://github.com/qubvel/segmentation_models.pytorch/blob/master/LICENSE
 
-Name: libdivide
-Files: numpy/core/include/numpy/libdivide/*
-License: Zlib
-  For license text, see numpy/core/include/numpy/libdivide/LICENSE.txt
+Name: Pytorch examples
+License: BSD
+  For license text, see https://github.com/pytorch/examples/blob/main/LICENSE
