@@ -1,11 +1,6 @@
 This repository bundles several libraries that are
 compatibly licensed.  We list these here.
 
-Name: lapack-lite
-Files: numpy/linalg/lapack_lite/*
-License: BSD-3-Clause
-  For details, see numpy/linalg/lapack_lite/LICENSE.txt
-
 Name: PytorchDigitalPathology
 License: MIT
   For details, see https://github.com/choosehappy/PytorchDigitalPathology/blob/master/LICENSE.txt
