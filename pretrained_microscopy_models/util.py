@@ -1,6 +1,8 @@
+import functools
 from webbrowser import get
 import matplotlib.pyplot as plt
 from collections import OrderedDict
+import segmentation_models_pytorch as smp
 
 # helper function for data visualization
 def visualize(**images):
@@ -82,8 +84,13 @@ def remove_module_from_state_dict(state_dict):
     else:
         return state_dict
 
+def get_special_preprocessing_fn(mean= [0.4723, 0.4599, 0.4468], std = [0.1684, 0.1575, 0.1675]):
+    params = {"mean": mean,
+              "std": std}
+    return functools.partial(smp.encoders._preprocessing.preprocess_input, **params)
+
 # debugging
 if __name__ == '__main__':
-    print(get_pretrained_microscopynet_url('se_resnet50', 'micronet', version=1.1))
-    print(get_pretrained_microscopynet_url('resnet50', 'micronet', version=1.0))
-    print(get_pretrained_microscopynet_url('resnet50', 'micronet'))
+    # print(get_pretrained_microscopynet_url('se_resnet50', 'micronet', version=1.1))
+    # print(get_pretrained_microscopynet_url('resnet50', 'micronet', version=1.0))
+    # print(get_pretrained_microscopynet_url('resnet50', 'micronet'))
