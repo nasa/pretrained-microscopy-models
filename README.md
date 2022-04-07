@@ -2,7 +2,8 @@
 
 Software tools to build deep learning microscopy segmentation and analysis models with less training data. Pretrained MicroNet encoders are available for download. Leverages transfer learning from classification models trained on a large (>100,000 images) dataset of microscopy images. <br>
 ## References
-A preprint of the paper is available [here](https://ntrs.nasa.gov/api/citations/20210026119/downloads/TM-20210026119.pdf).
+A preprint of the paper is available [here](https://ntrs.nasa.gov/api/citations/20210026119/downloads/TM-20210026119.pdf). </br>
+A presentation of the work is available [here on YouTube](https://www.youtube.com/watch?v=5k2BVkfPNVI).
 
 ## Instalation:
 1. First install [PyTorch](https://pytorch.org/).
@@ -45,7 +46,7 @@ Link: https://nasagov.app.box.com/f/f505f4652ffc4a1788e630282c5f8e58
 ![Ni-Superalloy](readme_images/super.jpg) ![Super Mask](readme_images/super_mask.jpg)
 
 #### Environmental barrier coatings (EBC 1-3 in paper)
-![EBC](readme_images/ebc.jpg) ![EBC Mask](readme_images/ebc_mask.png)
+![EBC](readme_images/ebc.jpg) ![EBC Mask](readme_images/ebc_mask.png). Note: Annotated images appear black because the annotation pixel values are 0 (background), 1 (oxide), and 2 (crack) out of 255 possible values.
 
 ## Available pretrained encoders
 
