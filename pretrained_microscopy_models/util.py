@@ -91,6 +91,6 @@ def get_special_preprocessing_fn(mean= [0.4723, 0.4599, 0.4468], std = [0.1684, 
 
 # debugging
 if __name__ == '__main__':
-    # print(get_pretrained_microscopynet_url('se_resnet50', 'micronet', version=1.1))
-    # print(get_pretrained_microscopynet_url('resnet50', 'micronet', version=1.0))
-    # print(get_pretrained_microscopynet_url('resnet50', 'micronet'))
+    print(get_pretrained_microscopynet_url('se_resnet50', 'micronet', version=1.1))
+    print(get_pretrained_microscopynet_url('resnet50', 'micronet', version=1.0))
+    print(get_pretrained_microscopynet_url('resnet50', 'micronet'))
