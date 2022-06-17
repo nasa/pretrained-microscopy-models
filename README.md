@@ -31,7 +31,7 @@ model.eval()  # <- MicrosNet model for classifcation or transfer learning
 import pretrained_microscopy_models as pmm
 
 # setup a UNet model with a ResNet50 backbone.
-model = pmm.util.get_segmentation_model('Unet', 'resnet50', 'micronet', classes=3)
+model = pmm.segmentation_training.create_segmentation_model('Unet', 'resnet50', 'micronet', classes=3)
 
 # See examples to train and make predictions with model.
 ```
