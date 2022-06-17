@@ -11,8 +11,8 @@ class Dataset(BaseDataset):
     
     
     Args:
-        images_dir (str or list): path to images folder or list of images
-        masks_dir (str): path to segmentation masks folder or list of images
+        images (str or list): path to images folder or list of images
+        masks (str): path to segmentation masks folder or list of images
         class_values (dict): values of classes to extract from segmentation mask. 
             Each dictionary value can be an integer or list that specifies the mask
             values that belong to the class specified by the corresponding dictionary key.
@@ -21,6 +21,9 @@ class Dataset(BaseDataset):
         preprocessing (albumentations.Compose): data preprocessing 
             (e.g. noralization, shape manipulation, etc.)
     
+    Note: If images and masks are directories the image and mask pairs should be 
+    laballed "ImageName.tif" and "ImageNamemask.tif" respectively. Otherwise
+    you should just pass the list of paths to images and masks.
     """
     
     def __init__(
