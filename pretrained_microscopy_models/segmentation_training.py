@@ -202,8 +202,11 @@ def segmentation_models_inference(io, model, preprocessing_fn, device = None, ba
                                   num_classes=3, probabilities=None):
 
     # This will not output the first class and assumes that the first class is wherever the other classes are not!
-
-    io = preprocessing_fn(io)
+    try:
+        io = preprocessing_fn(io)
+    except AttributeError:
+        io = preprocessing_fn(np.array(io))
+        
     io_shape_orig = np.array(io.shape)
     stride_size = patch_size // 2
     if device is None:
