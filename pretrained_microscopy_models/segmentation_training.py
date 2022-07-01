@@ -73,8 +73,8 @@ def create_segmentation_model(architecture,
     """
 
     # setup and check parameters
-    assert classes != 2, "Two classes is binary classification.  \
-        Just specify the posative class value"
+    assert classes != 2, "If you are doing binary classification then set \
+         classes=1 and the background class is implicit."
   
     if activation is None:
         activation = 'softmax2d' if classes > 1 else 'sigmoid' 
