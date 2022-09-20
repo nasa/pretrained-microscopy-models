@@ -2,7 +2,7 @@
 
 Software tools to build deep learning microscopy segmentation and analysis models with less training data. Pretrained MicroNet encoders are available for download. Leverages transfer learning from classification models trained on a large (>100,000 images) dataset of microscopy images. <br>
 ## References
-A preprint of the paper is available [here](https://ntrs.nasa.gov/api/citations/20210026119/downloads/TM-20210026119.pdf). </br>
+The paper is available [here](https://www.nature.com/articles/s41524-022-00878-5). </br>
 A presentation of the work is available [here on YouTube](https://www.youtube.com/watch?v=5k2BVkfPNVI).
 
 ## Instalation:

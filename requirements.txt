@@ -1,4 +1,4 @@
-segmentation-models-pytorch
+segmentation-models-pytorch==0.2.1
 matplotlib
 opencv-python
 albumentations
