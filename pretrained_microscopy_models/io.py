@@ -60,7 +60,8 @@ class Dataset(BaseDataset):
         
         # extract certain classes from mask (e.g. cars)
         masks = [np.all(mask == v, axis=-1) for v in self.class_values.values()]
-        masks[0] = ~np.any(masks[1:], axis=0)
+        if len(masks) > 1:
+            masks[0] = ~np.any(masks[1:], axis=0)
         mask = np.stack(masks, axis=-1).astype('float')
         
         # apply augmentations
