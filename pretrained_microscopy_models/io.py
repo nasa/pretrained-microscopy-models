@@ -59,7 +59,7 @@ class Dataset(BaseDataset):
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         
         # extract certain classes from mask (e.g. cars)
-        masks = [np.all(mask == v, axis=-1) for v in self.class_values.values()]
+        masks = [(np.isin(mask, v)) for v in self.class_values.values()]
         if len(masks) > 1:
             masks[0] = ~np.any(masks[1:], axis=0)
         mask = np.stack(masks, axis=-1).astype('float')
