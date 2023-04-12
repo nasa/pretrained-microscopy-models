@@ -41,6 +41,11 @@ def get_pretrained_microscopynet_url(encoder, encoder_weights, version=1.1,
     Returns:
         str: url to download the pretrained model
     """
+    
+    # there is an error with the name for resnext101_32x8d so catch and return
+    # (currently there is only version 1.0 for this model so don't need to check version.)
+    if encoder == 'resnext101_32x8d': 
+        return 'https://nasa-public-data.s3.amazonaws.com/microscopy_segmentation_models/resnext101_pretrained_microscopynet_v1.0.pth.tar'
 
     # only resnet50/micronet has version 1.1 so I'm not going to overcomplicate this right now.
     if encoder != 'resnet50' or encoder_weights != 'micronet':
