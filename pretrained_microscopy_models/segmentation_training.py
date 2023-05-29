@@ -96,7 +96,7 @@ def create_segmentation_model(architecture,
         raise ValueError('%s does not support dilated mode needed for %s.' %(encoder, architecture))
 
     # load pretrained weights 
-    if encoder_weights in ['micronet', 'imagemicronet']:
+    if encoder_weights in ['micronet', 'image-micronet']:
         map = None if torch.cuda.is_available() else torch.device('cpu')
         url = util.get_pretrained_microscopynet_url(encoder, encoder_weights)
         model.encoder.load_state_dict(model_zoo.load_url(url, map_location=map))
