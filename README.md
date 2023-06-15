@@ -20,7 +20,7 @@ import pretrained_microscopy_models as pmm
 import torch.utils.model_zoo as model_zoo
 
 model = torch.hub.load('pytorch/vision:v0.10.0', 'resnet50', pretrained=False)
-url = pmm.util.get_pretrained_microscopynet_url('resnet50', 'microscopynet')
+url = pmm.util.get_pretrained_microscopynet_url('resnet50', 'micronet')
 model.load_state_dict(model_zoo.load_url(url))
 model.eval()  # <- MicrosNet model for classifcation or transfer learning
 ```
