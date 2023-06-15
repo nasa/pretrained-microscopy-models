@@ -30,8 +30,8 @@ def get_pretrained_microscopynet_url(encoder, encoder_weights, version=1.1,
 
     Args:
         encoder (str): pretrained encoder model name (e.g. resnet50)
-        encoder_weights (str): pretraining dataset, either 'microscopynet' or 
-            'imagenet-microscopynet' with the latter indicating the encoder
+        encoder_weights (str): pretraining dataset, either 'micronet' or 
+            'imagenet-micronet' with the latter indicating the encoder
             was first pretrained on imagenet and then finetuned on microscopynet
         version (float): model version to use, defaults to latest. 
             Current options are 1.0 or 1.1.
