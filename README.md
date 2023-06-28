@@ -42,6 +42,7 @@ Any micrographs you can share to improve MicroNet would be greatly appreciated. 
 Link: https://nasagov.app.box.com/f/f505f4652ffc4a1788e630282c5f8e58
 
 ## Benchmark datasets:
+All data contained in this repository is lisenced under the MIT lisense (see LICENSE.txt).
 #### Ni-based superalloys (Super 1-4 in paper)
 ![Ni-Superalloy](readme_images/super.jpg) ![Super Mask](readme_images/super_mask.jpg)
 
@@ -50,7 +51,7 @@ Link: https://nasagov.app.box.com/f/f505f4652ffc4a1788e630282c5f8e58
 Note: Annotated images appear black because the annotation pixel values are 0 (background), 1 (oxide), and 2 (crack) out of 255 possible values.
 
 ## Available pretrained encoders
-
+The pre-trained encoders listed here are lisenced under the MIT lisense (see LICENSE.txt).
 ### MicroNet v1.1
 This model was retrained. The code will default to the latest version.
 
