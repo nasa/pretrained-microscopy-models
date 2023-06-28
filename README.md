@@ -42,7 +42,7 @@ Any micrographs you can share to improve MicroNet would be greatly appreciated. 
 Link: https://nasagov.app.box.com/f/f505f4652ffc4a1788e630282c5f8e58
 
 ## Benchmark datasets:
-All data contained in this repository is lisenced under the MIT lisense (see LICENSE.txt).
+All data contained in this repository are lisenced under the MIT lisense (see LICENSE.txt).
 #### Ni-based superalloys (Super 1-4 in paper)
 ![Ni-Superalloy](readme_images/super.jpg) ![Super Mask](readme_images/super_mask.jpg)
 
