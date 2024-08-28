@@ -5,7 +5,7 @@ Software tools to build deep learning microscopy segmentation and analysis model
 The paper is available [here](https://www.nature.com/articles/s41524-022-00878-5). </br>
 A presentation of the work is available [here on YouTube](https://www.youtube.com/watch?v=5k2BVkfPNVI).
 
-## Instalation:
+## Installation:
 1. First install [PyTorch](https://pytorch.org/).
 2. Install this pretrained_microscopy_models with the following command.
 ```bash
