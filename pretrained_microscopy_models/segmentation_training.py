@@ -123,7 +123,7 @@ def load_segmentation_model(model_path, classes):
     Returns:
         nn.module: PyTorch segmentation model
     """
-    state = torch.load(model_path)
+    state = torch.load(model_path, weights_only=False)
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     architecture = state['architecture']
     encoder = state['encoder']
@@ -309,7 +309,7 @@ def train_segmentation_model(model,
         # load saved weights
         model.load_state_dict(util.remove_module_from_state_dict(state['state_dict']))
     elif type(model) is str: # passed saved model state for restarting
-        state = torch.load(model) 
+        state = torch.load(model, weights_only=False) 
         architecture = state['architecture']
         encoder = state['encoder']
         model=create_segmentation_model(architecture, encoder, None, len(class_values))
