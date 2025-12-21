@@ -50,7 +50,8 @@ def create_segmentation_model(architecture,
     encoder, 
     encoder_weights, 
     classes, 
-    activation=None
+    activation=None, 
+    in_channels=3
 ):
     """Returns a segmentation model with the specified architecture and encoder 
     backbone. The encoder can be pre-trained with ImageNet, MicroNet,  
@@ -91,7 +92,8 @@ def create_segmentation_model(architecture,
             encoder_name=encoder, 
             encoder_weights=initial_weights,
             classes=classes,
-            activation=activation)
+            activation=activation, 
+            in_channels=in_channels)
     except ValueError:
         raise ValueError('%s does not support dilated mode needed for %s.' %(encoder, architecture))
 
